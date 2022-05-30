@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Model1.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="Model1StoreContainer">
+    <EntitySet Name="StorageSet" EntityType="Model1.Store.StorageSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="EmployeeSet" EntityType="Model1.Store.EmployeeSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ProductSet" EntityType="Model1.Store.ProductSet" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="StorageEmployee" Association="Model1.Store.StorageEmployee">
+      <End Role="Employee" EntitySet="EmployeeSet" />
+      <End Role="Storage" EntitySet="StorageSet" />
+    </AssociationSet>
+    <AssociationSet Name="ProductStorage" Association="Model1.Store.ProductStorage">
+      <End Role="Product" EntitySet="ProductSet" />
+      <End Role="Storage" EntitySet="StorageSet" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="StorageSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Address" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="EmployeeSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Login" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="FIO" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Post" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="StorageId" Type="int" Nullable="true" />
+  </EntityType>
+  <EntityType Name="ProductSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Price" Type="int" Nullable="false" />
+    <Property Name="Image" Type="varbinary(max)" Nullable="false" />
+    <Property Name="Amount" Type="int" Nullable="false" />
+    <Property Name="StorageId" Type="int" Nullable="true" />
+  </EntityType>
+  <Association Name="StorageEmployee">
+    <End Role="Employee" Type="Model1.Store.EmployeeSet" Multiplicity="*" />
+    <End Role="Storage" Type="Model1.Store.StorageSet" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Storage">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="StorageId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ProductStorage">
+    <End Role="Product" Type="Model1.Store.ProductSet" Multiplicity="*" />
+    <End Role="Storage" Type="Model1.Store.StorageSet" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Storage">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Product">
+        <PropertyRef Name="StorageId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

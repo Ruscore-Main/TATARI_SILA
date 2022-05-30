@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Model1" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+  <EntityContainer Name="Model1Container" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="StorageSet" EntityType="Model1.Storage" />
+    <EntitySet Name="EmployeeSet" EntityType="Model1.Employee" />
+    <EntitySet Name="ProductSet" EntityType="Model1.Product" />
+    <AssociationSet Name="StorageEmployee" Association="Model1.StorageEmployee">
+      <End Role="Employee" EntitySet="EmployeeSet" />
+      <End Role="Storage" EntitySet="StorageSet" />
+    </AssociationSet>
+    <AssociationSet Name="ProductStorage" Association="Model1.ProductStorage">
+      <End Role="Product" EntitySet="ProductSet" />
+      <End Role="Storage" EntitySet="StorageSet" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Storage">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" />
+    <Property Name="Address" Type="String" Nullable="false" />
+    <NavigationProperty Name="Employee" Relationship="Model1.StorageEmployee" FromRole="Storage" ToRole="Employee" />
+    <NavigationProperty Name="Product" Relationship="Model1.ProductStorage" FromRole="Storage" ToRole="Product" />
+  </EntityType>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Login" Type="String" Nullable="false" />
+    <Property Name="Password" Type="String" Nullable="false" />
+    <Property Name="FIO" Type="String" Nullable="false" />
+    <Property Name="Post" Type="String" Nullable="false" />
+    <NavigationProperty Name="Storage" Relationship="Model1.StorageEmployee" FromRole="Employee" ToRole="Storage" />
+    <Property Name="StorageId" Type="Int32" Nullable="true" />
+  </EntityType>
+  <EntityType Name="Product">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" />
+    <Property Name="Price" Type="Int32" Nullable="false" />
+    <Property Name="Image" Type="Binary" Nullable="false" />
+    <Property Name="Amount" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Storage" Relationship="Model1.ProductStorage" FromRole="Product" ToRole="Storage" />
+    <Property Name="StorageId" Type="Int32" Nullable="true" />
+  </EntityType>
+  <Association Name="StorageEmployee">
+    <End Type="Model1.Employee" Role="Employee" Multiplicity="*" />
+    <End Type="Model1.Storage" Role="Storage" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Storage">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="StorageId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ProductStorage">
+    <End Type="Model1.Product" Role="Product" Multiplicity="*" />
+    <End Type="Model1.Storage" Role="Storage" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Storage">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Product">
+        <PropertyRef Name="StorageId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
